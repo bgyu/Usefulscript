@@ -6,8 +6,15 @@ param(
     [string]$BindingOutputPath
 )
 
-# Get all of the .NET assemblies in the folder, ignoring native DLLs
-$assemblies = Get-ChildItem -Path $FolderPath -Filter *.dll | Where-Object { !($_.Name -like '*native*.dll') }
+# Get all of the strongly named .NET assemblies in the folder, ignoring native DLLs
+$assemblies = Get-ChildItem -Path $FolderPath -Filter *.dll | Where-Object {
+    try {
+        [Reflection.AssemblyName]::GetAssemblyName($_.FullName) | Out-Null
+        $true
+    } catch {
+        $false
+    }
+} | Where-Object { !($_.Name -like '*native*.dll') }
 
 # Create an empty array to store the binding information
 $bindingInfo = @()
@@ -17,10 +24,11 @@ foreach ($assembly in $assemblies) {
     $assemblyName = [Reflection.AssemblyName]::GetAssemblyName($assembly.FullName)
     $name = $assemblyName.Name
     $version = $assemblyName.Version
+    $publicKeyToken = [BitConverter]::ToString($assemblyName.GetPublicKeyToken()).Replace("-","").ToLower()
     $culture = $assemblyName.CultureName
     
     $bindingInfo += "<dependentAssembly>"
-    $bindingInfo += "    <assemblyIdentity name=`"$name`" publicKeyToken=`"null`" culture=`"$culture`" />"
+    $bindingInfo += "    <assemblyIdentity name=`"$name`" publicKeyToken=`"$publicKeyToken`" culture=`"$culture`" />"
     $bindingInfo += "    <bindingRedirect oldVersion=`"0.0.0.0-$version`" newVersion=`"$version`" />"
     $bindingInfo += "</dependentAssembly>"
 }
