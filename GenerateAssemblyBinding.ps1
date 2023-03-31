@@ -46,3 +46,9 @@ if ($BindingOutputPath) {
 }
 
 Set-Content -Path $configPath -Value $config
+
+# Use assembly binding script in MSBuild target
+# <Target Name="GenerateAssemblyBindings" AfterTargets="AfterBuild">
+#   <Exec Command="powershell.exe -File GenerateAssemblyBindings.ps1 -FolderPath $(OutputPath) -OutputPath $(OutputPath)app.config" />
+# </Target>
+
