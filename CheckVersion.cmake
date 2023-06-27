@@ -1,4 +1,4 @@
-function(Check_Version VERSION_NAME)
+macro(Check_Version VERSION_NAME)
     if(NOT DEFINED ${VERSION_NAME})
         if(NOT DEFINED ENV{${VERSION_NAME}})
             message(FATAL_ERROR "${VERSION_NAME} is not provided!")
@@ -8,13 +8,13 @@ function(Check_Version VERSION_NAME)
     endif()
 
     # Check if the version is empty or consists of only whitespace characters
-    string(STRIP ${VERSION_NAME} ${VERSION_NAME})
+    string(STRIP ${${VERSION_NAME}} ${VERSION_NAME})
     if("${${VERSION_NAME}}" STREQUAL "")
         message(FATAL_ERROR "${VERSION_NAME} is empty or consists of only whitespace characters!")
     else()
         message(STATUS "${VERSION_NAME}=${${VERSION_NAME}}")
     endif()
-endfunction()
+endmacro()
 
 # Call Check_Version for MAJOR_VERSION and MINOR_VERSION
 Check_Version(MAJOR_VERSION)
