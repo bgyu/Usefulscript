@@ -4,7 +4,10 @@ function(Check_Version VERSION_NAME)
             message(FATAL_ERROR "${VERSION_NAME} is not provided!")
         else()
             set(${VERSION_NAME} $ENV{${VERSION_NAME}})
+            message(STATUS "${VERSION_NAME}=${${VERSION_NAME}}")
         endif()
+    else()
+        message(STATUS "${VERSION_NAME}=${${VERSION_NAME}}")
     endif()
 
     # Check if the version is empty or consists of only whitespace characters
