@@ -1,3 +1,4 @@
+#fancygit
 fancy-git is a very good tool to beautify your terminal for git:
 https://github.com/diogocavilha/fancy-git/tree/master
 
@@ -22,3 +23,55 @@ Important note:
 You are logging to Linux use Windows Terminal or VS Code Terminal,
 but it is Windows to render these symbols, not Linux.
 So you have to install these fonts for Windows, not Linux.
+
+
+# oh-my-posh
+https://ohmyposh.dev/
+oh-my-posh can be used to customize PowerShell, git bash etc under Windows.
+
+https://learn.microsoft.com/en-us/windows/terminal/tutorials/custom-prompt-setup
+## Install oh-my-posh under Windows
+```powershell
+winget install JanDeDobbeleer.OhMyPosh
+```
+
+## Create powershell profile
+```powershell
+new-item -type file -path $profile -force
+```
+
+The content of the profile is:
+```powershell
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\paradox.omp.json" | Invoke-Expression
+```
+
+This is to use paradox theme.
+You can use `Get-PoshThemes` under powershell to get list of themes: https://ohmyposh.dev/docs/themes
+Or you can go to https://github.com/JanDeDobbeleer/oh-my-posh/tree/main/themes to browse themes.
+The theme name is the json file name.
+Environment variable `POSH_THEMES_PATH` points to where themes are installed.
+
+## Setup Git bash
+With git bash under Windows, you can create a `~/.bashrc` and put the following content:
+```bash
+eval "$(oh-my-posh init bash --config $POSH_THEMES_PATH/paradox.omp.json)"
+```
+This will setup *paradox* theme for Git bash.
+
+`oh-my-posh --help` to check available commands.
+
+## Install new fonts
+You need to install nerd fonts to show some icons, glyphs.
+https://github.com/ryanoasis/nerd-fonts/tree/master
+
+You can also use `oh-my-posh font install --user` to install new fonts. Issue above command and select fonts you want to install.
+After installation, you may need to restart Windows Terminal to show new fonts.
+For each Windows Terminal profile, eg. git bash, you can select the nerd fonts in "Appearance section", or add font manually in Windows Terminal settings json file:
+```json
+"commandline": "%PROGRAMFILES%/Git/usr/bin/bash.exe -i -l",
+"font": 
+{
+    "face": "CaskaydiaCove Nerd Font"
+},
+```
+
