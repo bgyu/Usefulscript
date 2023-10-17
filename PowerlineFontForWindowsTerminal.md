@@ -51,6 +51,12 @@ Or you can go to https://github.com/JanDeDobbeleer/oh-my-posh/tree/main/themes t
 The theme name is the json file name.
 Environment variable `POSH_THEMES_PATH` points to where themes are installed.
 
+Top themes:
+* kushal
+* cobalt2
+* craver
+* capr4n
+
 ## Setup Git bash
 With git bash under Windows, you can create a `~/.bashrc` and put the following content:
 ```bash
