@@ -87,7 +87,7 @@ curl -s https://ohmyposh.dev/install.sh | bash -s -- -d ~/.local/bin
 ```
 Ad the following line to **.bashrc** or **.bash_profile**:
 ```bash
-eval "$(oh-my-posh init bash --config ~/.cache/oh-my-posh/themes/kushal.omp.json)"
+eval "$(oh-my-posh init bash --config ~/themes/kushal.omp.json)"
 ```
-The themes are stored under **~/.cache/oh-my-posh/themes** folder.
+The themes are stored under **~/themes** folder.
 Need to log out then login to make it work, or just reload **.bashrc** via `. ~/.bashrc`.
