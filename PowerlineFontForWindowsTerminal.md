@@ -52,7 +52,12 @@ The theme name is the json file name.
 Environment variable `POSH_THEMES_PATH` points to where themes are installed.
 
 Top themes:
+* unicorn
+* kali
+* quick-term
+* hunk
 * kushal
+* wholespace
 * cobalt2
 * craver
 * capr4n
