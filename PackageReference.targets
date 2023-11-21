@@ -1,0 +1,33 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+ <!--
+    This custom targets will go through each PackageReference item in ItemGroup,
+    and process them one by one:
+    msbuild.exe PackageReference.targets
+  -->
+
+  <PropertyGroup>
+	<TargetFrameworkIdentifier>native</TargetFrameworkIdentifier>
+  </PropertyGroup>
+
+  <ItemGroup>
+	  <PackageReference Include="PackageA" Version="1.0.0" />
+	  <PackageReference Include="PackageB" Version="2.0.0" />
+  </ItemGroup>
+
+  <!-- Define a custom target that runs before the build -->
+  <Target Name="CustomTaskBeforeBuild" BeforeTargets="Build">
+    <!-- Iterate over PackageReference items -->
+    <ItemGroup>
+      <PackageReferences Include="@(PackageReference)" />
+    </ItemGroup>
+
+    <!-- Run a custom task for each package -->
+    <Message Text="Running custom task for package: %(PackageReferences.Identity)" Importance="high" />
+    <Message Text="Package Version: %(PackageReferences.Version)" Importance="high" />
+
+    <!-- Use %(PackageReferences.Identity) to get the package name -->
+    <Exec Command="echo %(PackageReferences.Identity)" />
+  </Target>
+
+</Project>
