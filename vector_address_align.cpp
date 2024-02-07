@@ -3,6 +3,12 @@
 #include <memory>
 #include <cstdlib>
 
+#if defined(_WIN32)
+#include <malloc.h>
+#elif defined(__linux__)
+#include <cstdlib>
+#endif
+
 template<typename T>
 class AlignedAllocator {
 public:
@@ -24,14 +30,23 @@ public:
 
     pointer allocate(size_type n) {
         void* p;
+#if defined(_WIN32)
+        p = _aligned_malloc(n * sizeof(T), 64);
+        if (!p) throw std::bad_alloc();
+#elif defined(__linux__)
         if (posix_memalign(&p, 64, n * sizeof(T)) != 0) {
             throw std::bad_alloc();
         }
+#endif
         return static_cast<pointer>(p);
     }
 
     void deallocate(pointer p, size_type) noexcept {
+#if defined(_WIN32)
+        _aligned_free(p);
+#elif defined(__linux__)
         std::free(p);
+#endif
     }
 };
 
