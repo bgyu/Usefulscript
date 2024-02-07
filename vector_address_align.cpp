@@ -65,3 +65,12 @@ int main() {
 
     return 0;
 }
+
+/*
+#include <boost/align/aligned_allocator.hpp>
+#include <vector>
+int main()
+{
+  std::vector<double, boost::alignment::aligned_allocator<double, 64>> vec;
+}
+*/
