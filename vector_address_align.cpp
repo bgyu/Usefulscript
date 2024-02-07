@@ -9,7 +9,7 @@
 #include <cstdlib>
 #endif
 
-template<typename T>
+template<typename T, size_t Alignment>
 class AlignedAllocator {
 public:
     using value_type = T;
@@ -20,21 +20,21 @@ public:
 
     template<typename U>
     struct rebind {
-        using other = AlignedAllocator<U>;
+        using other = AlignedAllocator<U, Alignment>;
     };
 
     AlignedAllocator() noexcept = default;
 
     template<typename U>
-    AlignedAllocator(const AlignedAllocator<U>&) noexcept {}
+    AlignedAllocator(const AlignedAllocator<U, Alignment>&) noexcept {}
 
     pointer allocate(size_type n) {
         void* p;
 #if defined(_WIN32)
-        p = _aligned_malloc(n * sizeof(T), 64);
+        p = _aligned_malloc(n * sizeof(T), Alignment);
         if (!p) throw std::bad_alloc();
 #elif defined(__linux__)
-        if (posix_memalign(&p, 64, n * sizeof(T)) != 0) {
+        if (posix_memalign(&p, Alignment, n * sizeof(T)) != 0) {
             throw std::bad_alloc();
         }
 #endif
@@ -51,8 +51,8 @@ public:
 };
 
 int main() {
-    // Define a vector of doubles with custom allocator
-    std::vector<double, AlignedAllocator<double>> vec;
+    // Define a vector of doubles with custom allocator with 64-byte alignment
+    std::vector<double, AlignedAllocator<double, 64>> vec;
 
     // Push some elements
     vec.push_back(3.14);
