@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 class Program
@@ -10,22 +10,57 @@ class Program
     {
         var processor = new MessageProcessor();
 
-        // Simulate adding messages with different IDs and timestamps
-        processor.EnqueueMessage(new Message { Id = 1, Timestamp = DateTime.UtcNow.AddSeconds(1), Content = "Message 1a" });
-        processor.EnqueueMessage(new Message { Id = 1, Timestamp = DateTime.UtcNow.AddSeconds(2), Content = "Message 1b" });
-        processor.EnqueueMessage(new Message { Id = 2, Timestamp = DateTime.UtcNow.AddSeconds(1), Content = "Message 2" });
-        processor.EnqueueMessage(new Message { Id = 3, Timestamp = DateTime.UtcNow.AddSeconds(1), Content = "Message 3" });
+        // Specify the number of threads for enqueuing messages
+        int numberOfThreads = 4;
 
-        // Simulating the end of message enqueueing for a specific ID
-        processor.CompleteAdding(1);
-        processor.CompleteAdding(2);
-        processor.CompleteAdding(3);
+        // Simulate adding messages from multiple threads
+        SimulateEnqueueMessages(processor, numberOfThreads);
+
+        // Waiting for a bit to ensure all messages have been enqueued and processing starts
+        Thread.Sleep(2000); // This is for demonstration; in a real app, you'd use a more robust sync mechanism
+
+        // Simulating the end of message enqueueing for specific IDs, in a real scenario this should be called when you know no more messages will be added.
+        // It might be based on application logic outside the scope of this demonstration.
+        processor.CompleteAddingForAllIds();
+
+        Console.WriteLine("All messages have been enqueued. Processing is underway.");
 
         // Wait for a key press to exit the program, in a real application, you would have a more robust way to wait for all processing to complete
         Console.WriteLine("Press any key to exit...");
         Console.ReadKey();
     }
+
+    static void SimulateEnqueueMessages(MessageProcessor processor, int numberOfThreads)
+    {
+        var tasks = new List<Task>();
+
+        for (int i = 0; i < numberOfThreads; i++)
+        {
+            int threadId = i; // Local copy for lambda capture
+            tasks.Add(Task.Run(() =>
+            {
+                var random = new Random();
+                
+                // Each thread enqueues a series of messages
+                for (int j = 0; j < 5; j++) // Assuming each thread produces 5 messages for simplicity
+                {
+                    var messageId = random.Next(1, 4); // Randomly assigns a message ID between 1 and 3
+                    var message = new Message
+                    {
+                        Id = messageId,
+                        Timestamp = DateTime.UtcNow.AddSeconds(random.Next(1, 5)),
+                        Content = $"Thread {threadId} Message {j} for ID {messageId}"
+                    };
+                    processor.EnqueueMessage(message);
+                    Thread.Sleep(100); // Simulate delay between message production
+                }
+            }));
+        }
+
+        Task.WaitAll(tasks.ToArray()); // Wait for all enqueueing tasks to complete
+    }
 }
+
 
 public class Message
 {
