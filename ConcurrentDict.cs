@@ -62,32 +62,35 @@ public class MQReader
 
     private void HandleMessage()
     {
-        while (true) // Replace with actual condition
-        {
-            dataReadyEvent.WaitOne(); // Wait for signal
+    while (true) // Use a proper condition to exit the loop as needed
+    {
+        dataReadyEvent.WaitOne(); // Wait for signal
 
-            List<string> sortedList = new List<string>();
-            foreach (var kvp in dictMessages)
+        // Take a snapshot of keys to process current messages only
+        var keysSnapshot = dictMessages.Keys.ToList();
+        
+        List<string> sortedList = new List<string>();
+        foreach (var key in keysSnapshot)
+        {
+            if (dictMessages.TryRemove(key, out List<Message> listMessages))
             {
-                List<Message> listMessages;
-                if (dictMessages.TryRemove(kvp.Key, out listMessages))
+                lock (listMessages) // Ensure thread-safe access to list
                 {
                     listMessages.Sort();
-                    foreach (var m in listMessages)
-                    {
-                        sortedList.Add(m.content);
-                    }
+                    sortedList.AddRange(listMessages.Select(m => m.content));
                 }
             }
-
-            foreach (var str in sortedList)
-            {
-                InsertToDatabase(str); // Implement this method
-            }
-
-            // Optionally: Notify MQ manager the data is committed and can be removed from the queue
         }
+
+        foreach (var content in sortedList)
+        {
+            InsertToDatabase(content); // Implement this database insertion logic
+        }
+
+        // Optionally: Notify MQ manager the data is committed, and the data can be removed from the queue
     }
+}
+
 
     private Message ReadMessageFromMQ()
     {
