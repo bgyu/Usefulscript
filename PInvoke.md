@@ -93,7 +93,7 @@ Internally, P/Invoke involves several components within the .NET runtime:
 P/Invoke is a powerful feature in .NET that enables managed code to call unmanaged functions. It involves metadata declarations, marshaling of data types, handling calling conventions, and managing transitions between managed and unmanaged execution contexts. By understanding these mechanisms, developers can effectively use P/Invoke to integrate .NET applications with native libraries and APIs.
 
 
-# How me more internals of P/Invoke implementation? Beter with some simplified code implementation, like the code transition from managed to unmanaged or vice versa
+# Internals of P/Invoke implementation with some simplified code implementation, like the code transition from managed to unmanaged or vice versa
 To delve deeper into the internals of P/Invoke implementation, it's useful to understand how the .NET runtime handles the transition between managed and unmanaged code. This involves several components, including metadata processing, stub generation, marshaling, and context switching.
 
 ### High-Level Workflow of P/Invoke
@@ -261,7 +261,7 @@ public class Runtime
 P/Invoke in .NET involves a series of steps and internal mechanisms to ensure that managed code can correctly call unmanaged functions. The process includes metadata processing, function resolution, stub generation, marshaling, and context switching. Understanding these components helps developers effectively use P/Invoke to integrate .NET applications with native libraries and APIs.
 
 
-# The details how managed code transit to native code?
+# The details how managed code transit to native code
 The transition from managed code to native code in the context of P/Invoke involves several steps and internal mechanisms within the .NET runtime. This process is quite complex and involves careful handling of various aspects such as metadata, marshaling, context switching, and error handling. Let's break down these steps in more detail:
 
 ### Steps Involved in the Transition from Managed to Native Code
