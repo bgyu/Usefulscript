@@ -93,7 +93,7 @@ Internally, P/Invoke involves several components within the .NET runtime:
 P/Invoke is a powerful feature in .NET that enables managed code to call unmanaged functions. It involves metadata declarations, marshaling of data types, handling calling conventions, and managing transitions between managed and unmanaged execution contexts. By understanding these mechanisms, developers can effectively use P/Invoke to integrate .NET applications with native libraries and APIs.
 
 
-# Internals of P/Invoke implementation with some simplified code implementation, like the code transition from managed to unmanaged or vice versa
+# Internals of P/Invoke implementation with some simplified code demonstration
 To delve deeper into the internals of P/Invoke implementation, it's useful to understand how the .NET runtime handles the transition between managed and unmanaged code. This involves several components, including metadata processing, stub generation, marshaling, and context switching.
 
 ### High-Level Workflow of P/Invoke
